@@ -1,0 +1,28 @@
+{
+  "name": "agent-tools",
+  "version": "1.0.0",
+  "description": "AI-конвейер для генерации игр на Phaser 3",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "pipeline": "tsx src/index.ts",
+    "brainstorm": "tsx src/cli.ts",
+    "models:list": "tsx list-free-models.ts",
+    "test:model": "tsx test-model.ts",
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "tsx": "^4.23.2",
+    "typescript": "^7.0.2"
+  }
+}
