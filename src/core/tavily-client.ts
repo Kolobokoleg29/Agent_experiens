@@ -24,7 +24,7 @@ export class TavilyClient {
           search_depth: 'basic',
         }),
       });
-      const data = await resp.json();
+      const data: any = await resp.json();
       if (!resp.ok) {
         return `Ошибка поиска (${resp.status}): ${JSON.stringify(data)}`;
       }

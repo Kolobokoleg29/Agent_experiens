@@ -1,50 +1,45 @@
 // src/agents/base-agent.ts
-
-import { AgentContext } from '../types';
-import { OpenRouterClient } from '../core/openrouter-client';
-import { TavilyClient } from '../core/tavily-client';
-import { Heartbeat } from '../core/heartbeat';
+import { PipelineContext } from '../types';
+import { ILLMClient, ISearchClient } from '../core/interfaces';
+import { withRetry, RetryOptions } from '../services/retry.service';
 
 export abstract class BaseAgent {
-  protected openRouter: OpenRouterClient;
-  protected tavily?: TavilyClient;
-  protected heartbeat: Heartbeat;
+  protected openRouter: ILLMClient;
+  protected tavily?: ISearchClient;
 
-  constructor(openRouter: OpenRouterClient, tavily?: TavilyClient) {
+  constructor(openRouter: ILLMClient, tavily?: ISearchClient) {
     this.openRouter = openRouter;
     this.tavily = tavily;
-    this.heartbeat = new Heartbeat();
   }
 
-  // Основной метод, который должны реализовать наследники
-  abstract run(context: AgentContext): Promise<any>;
+  abstract run(context: PipelineContext): Promise<PipelineContext>;
 
-  // Вспомогательный метод для вызова LLM с обработкой ошибок и heartbeat
-  protected async callLLM(
-    prompt: string,
-    systemPrompt?: string,
-    options?: { temperature?: number; maxTokens?: number }
-  ): Promise<string> {
-    this.heartbeat.start();
-    try {
-      const response = await this.openRouter.chat({
-        messages: [
-          ...(systemPrompt ? [{ role: 'system', content: systemPrompt }] : []),
-          { role: 'user', content: prompt },
-        ],
-        ...options,
-      });
-      return response.content;
-    } finally {
-      this.heartbeat.stop();
-    }
-  }
-
-  // Поиск в интернете (если включён)
   protected async search(query: string): Promise<string> {
     if (!this.tavily) {
       throw new Error('Tavily API not configured');
     }
     return this.tavily.search(query);
+  }
+
+  protected updateContext(context: PipelineContext, step: string): void {
+    context.updatedAt = new Date();
+    context.history.push(step);
+  }
+
+  /**
+   * Централизованный метод для вызова с повторными попытками
+   */
+  protected async callWithRetry<T>(
+    fn: () => Promise<T>,
+    options: RetryOptions = {}
+  ): Promise<T> {
+    return withRetry(fn, {
+      maxAttempts: 3,
+      baseDelay: 1000,
+      ...options,
+      onRetry: (attempt, error, delay) => {
+        console.warn(`⚠️ Ошибка: ${error.message}. Повторная попытка ${attempt}/${options.maxAttempts || 3} через ${delay}мс...`);
+      },
+    });
   }
 }

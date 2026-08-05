@@ -6,11 +6,14 @@
   "scripts": {
     "start": "tsx src/index.ts",
     "pipeline": "tsx src/index.ts",
+    "usage": "tsx usage.ts",
     "brainstorm": "tsx src/cli.ts",
     "models:list": "tsx list-free-models.ts",
     "test:model": "tsx test-model.ts",
     "build": "tsc",
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
@@ -18,11 +21,12 @@
   "type": "commonjs",
   "dependencies": {
     "dotenv": "^17.4.2",
-    "node-fetch": "^2.7.0"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
+    "phaser": "^4.2.1",
     "tsx": "^4.23.2",
-    "typescript": "^7.0.2"
+    "typescript": "^5.9.3"
   }
 }

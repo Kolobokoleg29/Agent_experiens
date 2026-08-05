@@ -29,7 +29,7 @@ export class DesignAgent extends BaseAgent {
         task: 'reasoning',
         temperature: 0.7,
         useCache: true,
-        maxTokens: 24000,
+        maxTokens: 32768,
       }
     );
 

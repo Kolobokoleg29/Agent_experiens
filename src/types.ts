@@ -1,48 +1,38 @@
 // src/types.ts
-export interface GameConcept {
-  title: string;
-  genre: string;
-  description: string;
-  mechanics: string[];
-  targetAudience: string;
-  monetization: {
-    ads?: boolean;
-    inAppPurchases?: boolean;
-    rewardedVideo?: boolean;
-  };
-  platforms: string[];
-}
+//
+// GameConcept, NicheIdea, ValidationResult, GameDesignDocument и GameCode
+// теперь определены как Zod-схемы в src/schemas.ts (единый источник истины —
+// см. P1-4) и просто реэкспортируются отсюда, чтобы не менять импорты по
+// всему проекту (`import { GameConcept } from '../types'` продолжает работать).
+import type {
+  GameConcept,
+  NicheIdea,
+  ValidationResult,
+  GameDesignDocument,
+  Economy,
+  Production,
+  AssetManifest,
+  AssetEntry,
+  GameCode,
+} from './schemas';
 
-export interface GameDesign {
-  scenes: {
-    name: string;
-    description: string;
-    objects: { type: string; name: string; properties: Record<string, any> }[];
-  }[];
-  physics?: any;
-  uiLayout?: any;
-  assets?: string[];
-  codeStructure?: string;
-}
-
-export interface GameCode {
-  files: { path: string; content: string }[];
-  mainFile: string;
-}
+export type {
+  GameConcept,
+  NicheIdea,
+  ValidationResult,
+  GameDesignDocument,
+  Economy,
+  Production,
+  AssetManifest,
+  AssetEntry,
+  GameCode,
+};
 
 export interface ReviewResult {
   passed: boolean;
   errors: string[];
   warnings: string[];
   fixes?: GameCode;
-}
-
-export interface AgentContext {
-  concept?: GameConcept;
-  design?: GameDesign;
-  code?: GameCode;
-  userPrompt?: string;
-  searchEnabled?: boolean;
 }
 
 export interface MarketData {
@@ -55,58 +45,53 @@ export interface PlatformInsights {
   niches: string[];
 }
 
-export interface NicheIdea {
-  name: string;
-  description: string;
-  whyBlueOcean: string;
-  existingGames: string[];
-  potentialMechanics: string;
-  complexity: number;
-  monetizationPotential: number;
+// === НОВЫЙ ЕДИНЫЙ КОНТЕКСТ ===
+export interface PipelineContext {
+  userPrompt?: string;
+  searchEnabled: boolean;
+
+  market?: MarketData;
+  niches?: NicheIdea[];
+  selectedNiche?: NicheIdea;
+  concept?: GameConcept;
+  validation?: ValidationResult;
+  gdd?: GameDesignDocument;
+  economy?: Economy;
+  production?: Production;
+  assets?: AssetManifest;
+  code?: GameCode;
+  review?: ReviewResult;
+  /** Путь на диске, куда ProjectWriterStage записал готовый проект (output/games/<slug>). */
+  projectPath?: string;
+
+  executionId: string;
+  startedAt: Date;
+  updatedAt: Date;
+  retryCount: number;
+  tokenUsage: number;
+  errors: string[];
+  warnings: string[];
+  history: string[];
+  metrics: Record<string, any>;
+
+  cache: Map<string, any>;
+
+  saveState?: (context: PipelineContext) => Promise<void>;
 }
 
-export interface ValidationResult {
-  scores: {
-    uniqueness: number;
-    feasibility: number;
-    retention_potential: number;
-    monetization_potential: number;
-    moderation_safety: number;
-    market_demand: number;
+export function createPipelineContext(userPrompt?: string, searchEnabled = true): PipelineContext {
+  return {
+    userPrompt,
+    searchEnabled,
+    executionId: `exec-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+    startedAt: new Date(),
+    updatedAt: new Date(),
+    retryCount: 0,
+    tokenUsage: 0,
+    errors: [],
+    warnings: [],
+    history: [],
+    metrics: {},
+    cache: new Map(),
   };
-  risks: string[];
-  improvements: string[];
-  alternatives: string[];
-  verdict: 'approved' | 'needs_work' | 'rejected';
-  issues?: string[];
-}
-
-export interface GameDesignDocument {
-  concept: string;
-  uniqueness: string;
-  targetAudience: {
-    persona: string;
-    motivation: string;
-    painPoints: string[];
-  };
-  coreLoop: {
-    perSecond: string;
-    perMinute: string;
-    perSession: string;
-    progression: string;
-  };
-  monetization: {
-    adFormats: string[];
-    iap: string[];
-    economy: string;
-  };
-  technicalArchitecture: {
-    scenes: string[];
-    entities: any[];
-    physics: string;
-    saveSystem: string;
-  };
-  moderationRequirements: string[];
-  mvpFeatures: string[];
-  risks: { risk: string; mitigation: string }[];
 }

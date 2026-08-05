@@ -1,11 +1,11 @@
-@"
 node_modules/
 output/
 cache/
 .env
 api-usage.json
+key-status.json
 *.log
 generated-prototype/
 stage*.json
 supervisor.log
-"@ | Out-File -Encoding utf8 .gitignore
+dist/
