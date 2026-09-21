@@ -1,4 +1,20 @@
 🎮 Agent for Phaser
+
+## 🧭 AI GameDev Operating Standard v2
+
+Репозиторий теперь также содержит канонический стандарт нашей AI-разработки игр, собранный из исследований Codex/agentic workflows, GameDev automation, GitHub Actions, worktrees, self-hosted runners, runtime QA и evidence-driven review.
+
+Основные документы:
+
+- [AI GameDev Operating System](docs/AI_GAMEDEV_OPERATING_SYSTEM.md) — единый рабочий стандарт;
+- [Project State](docs/PROJECT_STATE.md) — что уже принято и что ещё не внедрено;
+- [GitHub / Runner Architecture](docs/GITHUB_RUNNER_ARCHITECTURE.md) — разделение Codex, GitHub-hosted review и Windows game runner;
+- [Chat Operating Protocol](docs/CHAT_OPERATING_PROTOCOL.md) — как вести длинные задачи без потери состояния;
+- [Research Evidence](docs/RESEARCH_EVIDENCE.md) — происхождение решений и исследовательский корпус;
+- [Adoption Roadmap](docs/ADOPTION_ROADMAP.md) — P0–P3 внедрение без переписывания существующего пайплайна целиком.
+
+Ключевой принцип: **автономность агента увеличивается только вместе с проверяемостью и безопасностью отката**.
+
 https://img.shields.io/badge/node-%253E%253D18-brightgreen
 https://img.shields.io/badge/License-MIT-blue.svg
 https://img.shields.io/badge/TypeScript-5.0-blue
