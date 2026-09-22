@@ -29,7 +29,8 @@
     },
     "main_head": {
       "type": "string",
-      "minLength": 7
+      "minLength": 7,
+      "description": "Last-observed default-branch head snapshot. Verify live Git state for the current head."
     },
     "state": {
       "enum": [
@@ -58,13 +59,15 @@
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "description": "Last-observed active branch/PR head snapshot. May be null; verify live Git state because updating CURRENT_STATUS itself can advance a branch."
     },
     "last_verified_head": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "description": "Revision whose declared verification evidence was actually observed. This is a checkpoint, not necessarily current HEAD."
     },
     "active_lane": {
       "type": "string"
