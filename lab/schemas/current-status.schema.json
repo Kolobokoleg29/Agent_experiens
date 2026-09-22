@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI GameDev CURRENT_STATUS",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "updated_at",
+    "repository",
+    "default_branch",
+    "main_head",
+    "state",
+    "active_lane",
+    "next_slice"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[^/]+/[^/]+$"
+    },
+    "default_branch": {
+      "type": "string"
+    },
+    "main_head": {
+      "type": "string",
+      "minLength": 7
+    },
+    "state": {
+      "enum": [
+        "IDLE",
+        "IN_PROGRESS",
+        "VERIFIED_NOT_MERGED",
+        "MERGED",
+        "BLOCKED",
+        "RELEASE_PENDING"
+      ]
+    },
+    "active_pr": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "active_branch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "active_head": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "last_verified_head": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "active_lane": {
+      "type": "string"
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": {
+        "enum": [
+          "PASS",
+          "FAIL",
+          "OPEN",
+          "READY_NOT_EXECUTED",
+          "SKIPPED",
+          "INFRA_FAILURE",
+          "UNKNOWN"
+        ]
+      }
+    },
+    "next_slice": {
+      "type": "object",
+      "required": [
+        "id",
+        "goal"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "goal": {
+          "type": "string"
+        },
+        "risk": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "requires": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "deferred_lanes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blocking_debts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
