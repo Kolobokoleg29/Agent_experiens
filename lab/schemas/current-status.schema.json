@@ -1,21 +1,21 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "AI GameDev CURRENT_STATUS",
+  "title": "AI GameDev CURRENT_STATUS v2",
   "type": "object",
   "required": [
     "schema_version",
     "updated_at",
     "repository",
     "default_branch",
-    "main_head",
+    "observed_main_head",
     "state",
-    "active_lane",
+    "active_lane_state",
     "next_slice"
   ],
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "1.0"
+      "const": "2.0"
     },
     "updated_at": {
       "type": "string"
@@ -27,10 +27,12 @@
     "default_branch": {
       "type": "string"
     },
-    "main_head": {
-      "type": "string",
-      "minLength": 7,
-      "description": "Last-observed default-branch head snapshot. Verify live Git state for the current head."
+    "observed_main_head": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Last-observed main/default-branch head snapshot; live Git state is authoritative."
     },
     "state": {
       "enum": [
@@ -42,35 +44,92 @@
         "RELEASE_PENDING"
       ]
     },
-    "active_pr": {
-      "type": [
-        "integer",
-        "null"
-      ],
-      "minimum": 1
+    "active_lane_state": {
+      "enum": [
+        "KNOWN",
+        "NONE",
+        "AMBIGUOUS"
+      ]
     },
-    "active_branch": {
+    "active_lane": {
       "type": [
         "string",
         "null"
       ]
     },
-    "active_head": {
+    "active_work": {
       "type": [
-        "string",
+        "object",
         "null"
       ],
-      "description": "Last-observed active branch/PR head snapshot. May be null; verify live Git state because updating CURRENT_STATUS itself can advance a branch."
+      "properties": {
+        "pr": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "branch": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "observed_head": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "last_verified_head": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "blocking_gate": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
     },
-    "last_verified_head": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "description": "Revision whose declared verification evidence was actually observed. This is a checkpoint, not necessarily current HEAD."
-    },
-    "active_lane": {
-      "type": "string"
+    "active_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "label"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "pr": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "branch": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observed_head": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
     },
     "gates": {
       "type": "object",
@@ -79,6 +138,7 @@
           "PASS",
           "FAIL",
           "OPEN",
+          "PENDING",
           "READY_NOT_EXECUTED",
           "SKIPPED",
           "INFRA_FAILURE",
@@ -141,5 +201,40 @@
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "active_lane_state": {
+            "const": "KNOWN"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "active_work"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "active_lane_state": {
+            "const": "AMBIGUOUS"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "active_candidates"
+        ],
+        "properties": {
+          "active_candidates": {
+            "minItems": 2
+          }
+        }
+      }
+    }
+  ],
   "additionalProperties": false
 }
