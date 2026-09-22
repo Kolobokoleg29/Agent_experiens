@@ -1,5 +1,5 @@
 schema_version: "2.0"
-updated_at: "2026-09-22T07:35:00Z"
+updated_at: "2026-09-22T07:45:00Z"
 
 repository: "Kolobokoleg29/Agent_experiens"
 default_branch: "master"
@@ -13,8 +13,8 @@ active_work:
   pr: null
   branch: "lab/lean-bootstrap-evals"
   observed_head: null
-  last_verified_head: "c7679d6592b56f0785a117f1e4e345134a976f45"
-  blocking_gate: "PASS_G_NOT_RUN"
+  last_verified_head: "dd3f027712c84f5c113a76072ca5ca5a928bc532"
+  blocking_gate: "PASS_H_NOT_RUN"
 
 active_candidates: []
 
@@ -27,16 +27,20 @@ gates:
   pass_e_recoverability: "PASS"
   pass_f_correctness: "PASS"
   pass_f_recoverability: "PASS"
-  pass_f_efficiency: "OPEN"
-  compact_pr_discovery_contract: "PASS"
+  pass_g_correctness: "PASS"
+  pass_g_recoverability: "PASS"
+  pass_g_efficiency: "FAIL"
+  lean_logic_substantive_bottleneck: "PASS"
+  clean_execution_promotion: "OPEN"
 
 next_slice:
-  id: "pass-g-lean-v21-promotion"
-  goal: "Run one clean promotion benchmark with the fixed result.issues PR projection contract and zero duplicate PR discovery."
+  id: "pass-h-clean-execution"
+  goal: "Run one zero-discovery, no-heavy-payload execution benchmark without changing Lean v2.1 logic."
   risk: "LOW"
   requires:
-    - "Use lab/PASS_G_LEAN_V21_PROMOTION_BENCHMARK.md"
+    - "Use lab/PASS_H_LEAN_V21_CLEAN_EXECUTION.md"
     - "Keep FILIK2 read-only"
+    - "Do not perform tool/schema discovery"
 
 deferred_lanes:
   - "promotion-to-master"
@@ -46,14 +50,14 @@ deferred_lanes:
 blocking_debts: []
 
 source_refs:
-  - "lab/results/PASS_F_LEAN_V21_2026-09-22.md"
+  - "lab/results/PASS_G_LEAN_V21_2026-09-22.md"
   - "lab/GITHUB_PR_DISCOVERY_CONTRACT.md"
   - "lab/GITHUB_FAST_PATH.md"
   - ".agents/skills/project-audit/SKILL.md"
-  - "lab/PASS_G_LEAN_V21_PROMOTION_BENCHMARK.md"
+  - "lab/PASS_H_LEAN_V21_CLEAN_EXECUTION.md"
 
 notes:
-  - "PASS F reached 11 FILIK2 evidence requests with correctness/recoverability PASS."
-  - "Promotion remained NOT READY because search_prs was duplicated after a local projection error and a broad schema dump occurred."
-  - "The known search_prs collection contract is now fixed as result.issues; optional head_ref/base_ref must not trigger retries."
-  - "PASS G is the final clean promotion test; no new Lean version is planned unless it fails for a substantive reason."
+  - "PASS G preserved correctness/recoverability and used exactly one search_prs call."
+  - "PASS G executed 10 FILIK2 evidence calls (11 attempted) but failed efficiency because of 6 discovery calls and one broad schema dump."
+  - "Largest PASS G project payload was a heavyweight PR fetch (~334,968 chars), disproportionate to the facts used."
+  - "No further Lean routing redesign is planned. PASS H isolates execution/orchestration cleanliness."
