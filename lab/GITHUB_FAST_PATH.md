@@ -1,42 +1,71 @@
-# GitHub Fast Path for Lean Benchmarks
+# GitHub Fast Path — Lean v2
 
 Status: LAB ONLY
 
-Purpose: prevent broad tool-schema discovery from dominating context measurements.
+Purpose: minimize connector-schema overhead and project-evidence payload without weakening exact-head verification.
 
-## Rule
-Do not enumerate or print the full GitHub connector schema catalog.
+## Discovery rule
 
-When GitHub actions are needed:
-1. reference exact action names;
-2. inspect metadata only for the exact action whose schema is unknown;
-3. emit only the minimum fields needed to invoke it;
-4. do not dump descriptions for unrelated actions.
+Never enumerate the GitHub namespace or print broad schema catalogs.
 
-## Preferred read-only actions
-Use the smallest applicable surface:
-- `mcp__GitHub__fetch_file` — known repository file at known path/ref;
-- `mcp__GitHub__fetch` — repository/branch/REST GET when exact endpoint is known;
-- `mcp__GitHub__search_prs` — discover an active PR only when status metadata does not already name it;
-- `mcp__GitHub__fetch_pr` — normalized PR details when needed;
-- `mcp__GitHub__fetch_commit_workflow_runs` — exact commit workflow runs;
-- `mcp__GitHub__fetch_workflow_job_steps` — step-level proof only when workflow-level success is insufficient;
-- `mcp__GitHub__list_pull_request_reviews` — only when an independent-review gate is relevant.
+If a tool signature is unknown:
+1. query the exact tool name only;
+2. emit only compact metadata for that tool;
+3. count it under TOOL_DISCOVERY_CALLS.
 
-## Discovery discipline
-If a tool signature is not already available:
-- query `ALL_TOOLS` by the exact tool name;
-- output only that one tool's compact metadata;
-- never filter broadly by namespace and print dozens of schemas.
+Do not preload tools that may be useful later.
+
+## Project-evidence rule
+
+Prefer the narrowest response that proves the fact.
+
+Needed fact -> desired payload:
+- default branch head -> SHA only;
+- PR identity -> number/state/draft/head/base only;
+- exact-head checks -> run/job name + status/conclusion only;
+- step proof -> only the relevant job's step summaries;
+- review gate -> review state/count only.
+
+Avoid:
+- generic commit endpoints that include full diff/files;
+- broad pull-list bodies when only PR identity is needed;
+- fetching the same PR body twice;
+- PR-only workflow actions on merge commits when their semantics exclude push/merge runs.
+
+## Branch-specific docs
+
+When a current work item is a PR and its domain/evidence doc was introduced on that branch:
+1. read it at the active exact head first;
+2. do not probe main first merely out of habit.
+
+## Active-lane discovery
+
+If CURRENT_STATUS is absent:
+- zero plausible implementation PRs -> NONE;
+- one plausible implementation PR -> verify it;
+- multiple plausible implementation PRs -> AMBIGUOUS_ACTIVE_LANE.
+
+Do not use "most recently updated" as canonical truth.
+
+Escalate to at most PROJECT_STATE + one domain doc before reporting unresolved ambiguity.
 
 ## Accounting
-Keep separate counters:
-- TASK_EVIDENCE_REQUESTS: GitHub/project evidence calls;
-- TOOL_DISCOVERY_CALLS: calls used only to learn connector schemas;
-- TOOL_DISCOVERY_CONTEXT: approximate text/tokens emitted by discovery when measurable.
 
-Do not mix the two into one number.
+Keep separate:
+- TASK_EVIDENCE_REQUESTS
+- TOOL_DISCOVERY_CALLS
+- TOOL_DISCOVERY_CONTEXT
+- PROJECT_EVIDENCE_CONTEXT
 
-## Interpretation
-A workflow optimization is successful only if task-evidence cost falls without correctness loss.
-Harness/tool-discovery overhead is reported separately and must not be hidden.
+A request can be cheap in count but expensive in payload; report both.
+
+## Budget target
+
+Status/resume benchmark target:
+- <= 13 project-evidence requests;
+- no broad schema dump;
+- no generic commit-diff payload;
+- no repeated file reads;
+- no avoidable 404 probes.
+
+Correctness outranks the budget.
