@@ -1,31 +1,37 @@
-schema_version: "1.0"
-updated_at: "2026-09-22T06:40:00Z"
+schema_version: "2.0"
+updated_at: "2026-09-22T07:00:00Z"
 
 repository: "Kolobokoleg29/Agent_experiens"
 default_branch: "master"
-main_head: "685eff452e8260613840de3cc61fe6feb51cc31b"
+observed_main_head: "685eff452e8260613840de3cc61fe6feb51cc31b"
 
 state: "IN_PROGRESS"
-
-active_pr: null
-active_branch: "lab/lean-bootstrap-evals"
-active_head: null
-last_verified_head: "152025d7db0782e61494681ae368362025089b28"
+active_lane_state: "KNOWN"
 active_lane: "lean-bootstrap-evals"
+
+active_work:
+  pr: null
+  branch: "lab/lean-bootstrap-evals"
+  observed_head: null
+  last_verified_head: "93637fa8dd18e3af9463c1d533a1322d728042ee"
+  blocking_gate: "PASS_E_NOT_RUN"
+
+active_candidates: []
 
 gates:
   lab_files_present: "PASS"
   production_game_repos_untouched: "PASS"
-  lean_status_benchmark_c: "PASS"
-  total_context_savings: "OPEN"
+  pass_c_correctness: "PASS"
+  pass_d_correctness: "PASS"
+  pass_d_efficiency: "OPEN"
 
 next_slice:
-  id: "pass-d-clean-tooling-overhead"
-  goal: "Separate Lean task-evidence cost from GitHub tool-discovery overhead using a controlled fixture and a fresh live replay."
+  id: "pass-e-lean-v2-live-recovery"
+  goal: "Validate compact evidence and active-lane ambiguity handling in a fresh read-only FILIK2 recovery run."
   risk: "LOW"
   requires:
-    - "Use lab/PASS_D_CLEAN_BENCHMARK.md"
-    - "Keep game repositories read-only"
+    - "Use lab/PASS_E_LEAN_V2_BENCHMARK.md"
+    - "Keep FILIK2 read-only"
 
 deferred_lanes:
   - "promotion-to-master"
@@ -35,12 +41,11 @@ deferred_lanes:
 blocking_debts: []
 
 source_refs:
-  - "lab/results/PASS_C_FILIK2_LEAN_2026-09-22.md"
+  - "lab/results/PASS_D_LEAN_2026-09-22.md"
+  - "lab/LEAN_BOOTSTRAP.md"
+  - ".agents/skills/project-audit/SKILL.md"
   - "lab/GITHUB_FAST_PATH.md"
-  - "lab/PASS_D_CLEAN_BENCHMARK.md"
 
 notes:
-  - "PASS C: 13 GitHub requests vs Legacy 18 and Current OS 23."
-  - "PASS C preserved exact-head correctness and one-slice scope control."
-  - "Total context savings remain unproven because broad tool-schema discovery polluted the run."
-  - "A status file cannot authoritatively store its own current branch HEAD: writing the file creates a newer commit. Treat stored head values as observations and verify live GitHub state."
+  - "PASS D preserved correctness but exposed broad project-evidence payload as the new bottleneck."
+  - "Lean v2 now models AMBIGUOUS_ACTIVE_LANE explicitly."
