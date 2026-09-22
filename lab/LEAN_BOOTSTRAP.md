@@ -87,3 +87,14 @@ while materially reducing:
 - repeated reads;
 - failed searches;
 - human corrections.
+
+
+## Volatile SHA rule
+
+A repository status file cannot make its own current branch SHA authoritative: updating the status file itself creates a newer commit.
+
+Therefore:
+- `main_head` / `active_head` in CURRENT_STATUS are last-observed snapshots only;
+- `last_verified_head` names the revision whose evidence was actually verified;
+- live Git/PR state remains authoritative for the current head;
+- a mismatch between stored head and live head is expected after status-only commits and must be classified, not silently treated as a product regression.
