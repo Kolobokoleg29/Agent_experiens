@@ -1,0 +1,42 @@
+schema_version: "1.0"
+updated_at: "2026-09-22T06:33:00Z"
+
+repository: "Kolobokoleg29/Agent_experiens"
+default_branch: "master"
+main_head: "685eff452e8260613840de3cc61fe6feb51cc31b"
+
+state: "IN_PROGRESS"
+
+active_pr: null
+active_branch: "lab/lean-bootstrap-evals"
+active_head: "b52dc08a930a353681da2366c768fa24b24905d0"
+last_verified_head: "b52dc08a930a353681da2366c768fa24b24905d0"
+active_lane: "lean-bootstrap-evals"
+
+gates:
+  lab_files_present: "PASS"
+  production_game_repos_modified: "PASS"
+  lean_status_benchmark: "OPEN"
+
+next_slice:
+  id: "lean-status-benchmark-c"
+  goal: "Run a fresh-context Lean FAST status/resume benchmark against the same FILIK2 snapshot and compare cost/quality with recorded Legacy and Current OS baselines."
+  risk: "LOW"
+  requires:
+    - "Use a fresh chat/context that has not seen the prior benchmark answer."
+
+deferred_lanes:
+  - "promotion-to-master"
+  - "adoption-in-FILIK2"
+  - "adoption-in-other-games"
+
+blocking_debts: []
+
+source_refs:
+  - "lab/LEAN_BOOTSTRAP.md"
+  - ".agents/skills/project-audit/SKILL.md"
+  - "lab/BENCHMARK_PLAN.md"
+
+notes:
+  - "No game repository may be mutated by this lab benchmark."
+  - "Promotion requires measured evidence and explicit approval."
