@@ -1,5 +1,5 @@
 schema_version: "2.0"
-updated_at: "2026-09-22T07:15:00Z"
+updated_at: "2026-09-22T07:35:00Z"
 
 repository: "Kolobokoleg29/Agent_experiens"
 default_branch: "master"
@@ -13,8 +13,8 @@ active_work:
   pr: null
   branch: "lab/lean-bootstrap-evals"
   observed_head: null
-  last_verified_head: "6ccb8b2c31f935ee0b7f9358267d99496be1c425"
-  blocking_gate: "PASS_F_NOT_RUN"
+  last_verified_head: "c7679d6592b56f0785a117f1e4e345134a976f45"
+  blocking_gate: "PASS_G_NOT_RUN"
 
 active_candidates: []
 
@@ -25,15 +25,17 @@ gates:
   pass_d_correctness: "PASS"
   pass_e_correctness: "PASS"
   pass_e_recoverability: "PASS"
-  pass_e_efficiency: "OPEN"
-  compact_pr_discovery_validated: "PASS"
+  pass_f_correctness: "PASS"
+  pass_f_recoverability: "PASS"
+  pass_f_efficiency: "OPEN"
+  compact_pr_discovery_contract: "PASS"
 
 next_slice:
-  id: "pass-f-lean-v21-stability"
-  goal: "Verify that canonical compact PR discovery creates stable request headroom while preserving correctness and ambiguity handling."
+  id: "pass-g-lean-v21-promotion"
+  goal: "Run one clean promotion benchmark with the fixed result.issues PR projection contract and zero duplicate PR discovery."
   risk: "LOW"
   requires:
-    - "Use lab/PASS_F_LEAN_V21_BENCHMARK.md"
+    - "Use lab/PASS_G_LEAN_V21_PROMOTION_BENCHMARK.md"
     - "Keep FILIK2 read-only"
 
 deferred_lanes:
@@ -44,13 +46,14 @@ deferred_lanes:
 blocking_debts: []
 
 source_refs:
-  - "lab/results/PASS_E_LEAN_V2_2026-09-22.md"
-  - "lab/LEAN_BOOTSTRAP.md"
-  - ".agents/skills/project-audit/SKILL.md"
+  - "lab/results/PASS_F_LEAN_V21_2026-09-22.md"
+  - "lab/GITHUB_PR_DISCOVERY_CONTRACT.md"
   - "lab/GITHUB_FAST_PATH.md"
-  - "lab/PASS_F_LEAN_V21_BENCHMARK.md"
+  - ".agents/skills/project-audit/SKILL.md"
+  - "lab/PASS_G_LEAN_V21_PROMOTION_BENCHMARK.md"
 
 notes:
-  - "PASS E: correctness PASS, recoverability PASS, efficiency PARTIAL."
-  - "PASS E hit 13 FILIK2 evidence requests exactly, with avoidable PR-discovery/tooling waste."
-  - "Lean v2.1 standardizes mcp__GitHub__search_prs as the canonical open-PR discovery primitive."
+  - "PASS F reached 11 FILIK2 evidence requests with correctness/recoverability PASS."
+  - "Promotion remained NOT READY because search_prs was duplicated after a local projection error and a broad schema dump occurred."
+  - "The known search_prs collection contract is now fixed as result.issues; optional head_ref/base_ref must not trigger retries."
+  - "PASS G is the final clean promotion test; no new Lean version is planned unless it fails for a substantive reason."
