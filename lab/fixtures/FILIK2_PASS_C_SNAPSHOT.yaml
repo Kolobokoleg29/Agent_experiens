@@ -1,0 +1,37 @@
+schema_version: "1.0"
+fixture_id: "filik2-pass-c-2026-09-22"
+purpose: "Controlled replay of PASS C routing/context decisions without mutating FILIK2."
+
+repository: "Kolobokoleg29/FILIK2"
+main_head: "a7954eccb4b0d6ca4622bc96acb94110fea5614b"
+main_state: "merged docs-only checkpoint #97"
+
+active_pr:
+  number: 98
+  state: "OPEN_DRAFT_UNMERGED"
+  branch: "ui-reference-golden-screen-infra"
+  live_head: "8f040b4c3c0d6882b504d7083e86249b780e1132"
+  pr_body_claimed_head: "805dc2d1f16146c571723683046d19c11ddedefe"
+
+current_exact_head_gate:
+  name: "PR Validation #490"
+  state: "PENDING"
+
+last_verified_checkpoint:
+  sha: "805dc2d1f16146c571723683046d19c11ddedefe"
+  workflow: "PR Validation #486"
+  result: "PASS"
+  notes:
+    - "Canonical documentation validation succeeded."
+    - "Runtime/browser/Yandex/budget steps were SKIPPED because classification was docs-only."
+    - "This checkpoint became historical after the active head moved."
+
+expected_next_slice:
+  id: "pr-98-exact-head-closeout"
+  goal: "Verify required gates and independent review on the live PR #98 head, then synchronize evidence/checkpoint."
+
+expected_invariants:
+  - "Do not transfer PASS from 805dc2d1 to 8f040b4c."
+  - "Do not call PR #98 merged."
+  - "Choose one active next slice."
+  - "Do not let deferred/unrelated lanes hijack execution order."
