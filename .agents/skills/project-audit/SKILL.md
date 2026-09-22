@@ -38,47 +38,50 @@ Do not preload PROJECT_STATE, ROADMAP, DECISIONS, debt or global OS.
 1. Read local AGENTS.
 2. Probe CURRENT_STATUS once. If absent, record `STATUS_MISSING`; do not retry.
 3. Verify live default-branch HEAD with the smallest response available.
-4. If status does not name a canonical lane, discover open PRs with the canonical compact primitive:
+4. If status does not name a canonical lane, discover open PRs with:
    - `mcp__GitHub__search_prs`
    - repository-scoped
    - `state=open`
    - `query=""`
-   - compact projection only.
+   - read collection from `result.issues`
+   - project only number/title/state/draft/head_sha/updated_at and optional head_ref/base_ref.
    Never use issue search for PR discovery.
+   Never rerun identical successful search_prs solely to repair local projection.
 5. Resolve active work:
    - if CURRENT_STATUS says KNOWN, verify only that PR/branch;
    - if it says AMBIGUOUS, verify only declared candidates;
    - if status is missing and multiple implementation PRs are plausible, set `AMBIGUOUS_ACTIVE_LANE`; do not choose by recency.
-6. Verify the live active head when a lane is known.
-7. Verify required checks on that exact head using workflow/job summaries; load step details only when the workflow label is insufficient.
-8. Never use a PR-only workflow lookup on a merge commit when action semantics exclude it.
+6. Verify live active head when lane is known.
+7. Verify required checks on that exact head using workflow/job summaries; load step details only when workflow label is insufficient.
+8. Never use PR-only workflow lookup on merge commit when semantics exclude it.
 9. Compare snapshots vs live state and mark STALE/MISMATCH.
 10. If active lane/next slice remains ambiguous, escalate once to NORMAL:
    - PROJECT_STATE;
    - at most one relevant domain document;
    - read branch-specific domain evidence from active exact head first.
-11. If ambiguity remains, return `AMBIGUOUS_ACTIVE_LANE`; do not invent a next feature.
+11. If ambiguity remains, return `AMBIGUOUS_ACTIVE_LANE`; do not invent next feature.
 12. Distinguish merged main checkpoint, unmerged verified checkpoint and historical checkpoint.
-13. Stop when current head, active lane/ambiguity, verified checkpoint, blocking gate and next slice (when provable) are established.
+13. Stop when current head, lane/ambiguity, verified checkpoint, blocking gate and next slice when provable are established.
 
 ## Compact-evidence rule
 
-Avoid evidence that returns:
+Avoid:
 - full commit diffs;
 - changed-file arrays;
 - repeated PR bodies;
 - broad issue-search payloads;
-- large unrelated metadata.
+- large unrelated metadata;
+- duplicate evidence requests caused only by local formatting/projection mistakes.
 
-If only SHA/state/draft/head/check conclusion is needed, use compact actions and projection.
+A successful evidence response should be reused locally whenever possible.
 
 ## Verification semantics
 
-- PASS = required gate executed successfully on the exact relevant revision.
+- PASS = required gate executed successfully on exact relevant revision.
 - OPEN/PENDING/READY_NOT_EXECUTED/SKIPPED != PASS.
 - Historical green evidence != current PASS.
 - Open/unmerged != merged.
-- PR-head PASS != merge-SHA PASS unless the gate actually ran on merge SHA.
+- PR-head PASS != merge-SHA PASS unless gate actually ran on merge SHA.
 - live GitHub state outranks stale volatile prose.
 
 ## Evidence accounting
@@ -97,6 +100,7 @@ Use explicit states:
 - STATUS_MISSING;
 - STALE_STATUS;
 - AMBIGUOUS_ACTIVE_LANE;
+- CONNECTOR_CONTRACT_MISMATCH;
 - VERIFICATION_PENDING;
 - BLOCKED;
 - UNKNOWN.
@@ -104,4 +108,4 @@ Use explicit states:
 Never turn ambiguity into a confident execution decision.
 
 ## Learning loop
-Prefer improving compact status/evidence surfaces over adding mandatory reading.
+Prefer improving compact status/evidence contracts over adding mandatory reading.
