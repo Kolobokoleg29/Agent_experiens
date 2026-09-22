@@ -1,14 +1,42 @@
-# GitHub Fast Path — Lean v2
+# GitHub Fast Path — Lean v2.1
 
 Status: LAB ONLY
 
 Purpose: minimize connector-schema overhead and project-evidence payload without weakening exact-head verification.
 
+## Canonical open-PR discovery primitive
+
+For repository-scoped open PR identity, use this path first:
+
+`mcp__GitHub__search_prs`
+
+Arguments:
+- `repository_full_name=<owner/repo>`
+- `state="open"`
+- `query=""`
+- `topn=20` (or the smallest sufficient cap)
+
+Immediately project each result down to:
+- number
+- title
+- state
+- draft
+- head_ref when available
+- head_sha
+- base_ref when available
+- updated_at
+
+Do NOT use `search_issues` for PR discovery.
+Do NOT fetch individual PR bodies merely to discover open PR identity.
+Do NOT enumerate tool schemas when this action is already known.
+
+Validated in lab against FILIK2 on 2026-09-22: one call returned open PRs #95, #96 and #99.
+
 ## Discovery rule
 
 Never enumerate the GitHub namespace or print broad schema catalogs.
 
-If a tool signature is unknown:
+If a genuinely unknown tool signature is needed:
 1. query the exact tool name only;
 2. emit only compact metadata for that tool;
 3. count it under TOOL_DISCOVERY_CALLS.
@@ -21,9 +49,10 @@ Prefer the narrowest response that proves the fact.
 
 Needed fact -> desired payload:
 - default branch head -> SHA only;
-- PR identity -> number/state/draft/head/base only;
+- open PR identity -> canonical `search_prs` path above;
+- specific PR state -> number/state/draft/head/base only;
 - exact-head checks -> run/job name + status/conclusion only;
-- step proof -> only the relevant job's step summaries;
+- step proof -> only relevant job step summaries;
 - review gate -> review state/count only.
 
 Avoid:
@@ -63,6 +92,7 @@ A request can be cheap in count but expensive in payload; report both.
 
 Status/resume benchmark target:
 - <= 13 project-evidence requests;
+- preferably <= 11 after canonical PR discovery is available;
 - no broad schema dump;
 - no generic commit-diff payload;
 - no repeated file reads;
