@@ -1,5 +1,5 @@
 schema_version: "2.0"
-updated_at: "2026-09-22T07:00:00Z"
+updated_at: "2026-09-22T07:15:00Z"
 
 repository: "Kolobokoleg29/Agent_experiens"
 default_branch: "master"
@@ -13,8 +13,8 @@ active_work:
   pr: null
   branch: "lab/lean-bootstrap-evals"
   observed_head: null
-  last_verified_head: "93637fa8dd18e3af9463c1d533a1322d728042ee"
-  blocking_gate: "PASS_E_NOT_RUN"
+  last_verified_head: "6ccb8b2c31f935ee0b7f9358267d99496be1c425"
+  blocking_gate: "PASS_F_NOT_RUN"
 
 active_candidates: []
 
@@ -23,14 +23,17 @@ gates:
   production_game_repos_untouched: "PASS"
   pass_c_correctness: "PASS"
   pass_d_correctness: "PASS"
-  pass_d_efficiency: "OPEN"
+  pass_e_correctness: "PASS"
+  pass_e_recoverability: "PASS"
+  pass_e_efficiency: "OPEN"
+  compact_pr_discovery_validated: "PASS"
 
 next_slice:
-  id: "pass-e-lean-v2-live-recovery"
-  goal: "Validate compact evidence and active-lane ambiguity handling in a fresh read-only FILIK2 recovery run."
+  id: "pass-f-lean-v21-stability"
+  goal: "Verify that canonical compact PR discovery creates stable request headroom while preserving correctness and ambiguity handling."
   risk: "LOW"
   requires:
-    - "Use lab/PASS_E_LEAN_V2_BENCHMARK.md"
+    - "Use lab/PASS_F_LEAN_V21_BENCHMARK.md"
     - "Keep FILIK2 read-only"
 
 deferred_lanes:
@@ -41,11 +44,13 @@ deferred_lanes:
 blocking_debts: []
 
 source_refs:
-  - "lab/results/PASS_D_LEAN_2026-09-22.md"
+  - "lab/results/PASS_E_LEAN_V2_2026-09-22.md"
   - "lab/LEAN_BOOTSTRAP.md"
   - ".agents/skills/project-audit/SKILL.md"
   - "lab/GITHUB_FAST_PATH.md"
+  - "lab/PASS_F_LEAN_V21_BENCHMARK.md"
 
 notes:
-  - "PASS D preserved correctness but exposed broad project-evidence payload as the new bottleneck."
-  - "Lean v2 now models AMBIGUOUS_ACTIVE_LANE explicitly."
+  - "PASS E: correctness PASS, recoverability PASS, efficiency PARTIAL."
+  - "PASS E hit 13 FILIK2 evidence requests exactly, with avoidable PR-discovery/tooling waste."
+  - "Lean v2.1 standardizes mcp__GitHub__search_prs as the canonical open-PR discovery primitive."
