@@ -1,0 +1,41 @@
+schema_version: "1.0"
+updated_at: "2026-09-22T00:00:00Z"
+
+repository: "owner/game-repo"
+default_branch: "main"
+main_head: "abcdef123456"
+
+state: "VERIFIED_NOT_MERGED"
+
+active_pr: 123
+active_branch: "feature/example"
+active_head: "123456abcdef"
+last_verified_head: "123456abcdef"
+active_lane: "example-lane"
+
+gates:
+  pr_validation: "PASS"
+  browser: "PASS"
+  platform_proxy: "PASS"
+  bundle: "PASS"
+  physical_device: "OPEN"
+
+next_slice:
+  id: "next-bounded-slice"
+  goal: "One observable outcome only"
+  risk: "MEDIUM"
+  requires:
+    - "active PR integrated or explicitly closed"
+
+deferred_lanes:
+  - "example-deferred-high-risk-lane"
+
+blocking_debts:
+  - "real-device acceptance remains open for release"
+
+source_refs:
+  - "docs/PROJECT_STATE.md"
+  - "docs/PROJECT_ROADMAP.md"
+
+notes:
+  - "Live GitHub state outranks stale volatile fields in documents."
