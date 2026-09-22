@@ -1,4 +1,4 @@
-# Lean Bootstrap v2
+# Lean Bootstrap v2.1
 
 Status: LAB EXPERIMENT — NOT CANONICAL
 
@@ -11,6 +11,15 @@ Core route:
 AGENTS -> CURRENT_STATUS -> task Skill -> compact live evidence -> only necessary domain docs
 
 The full global operating standard is never a default bootstrap dependency.
+
+## v2.1 delta
+
+PASS E showed that routing/correctness are sound. The remaining avoidable cost was open-PR discovery.
+
+Canonical repository-scoped open-PR discovery is now:
+`mcp__GitHub__search_prs(repository_full_name, state="open", query="", topn=<small cap>)`
+
+Immediately project results to minimal identity fields. Do not probe issue-search first.
 
 ## Modes
 
@@ -57,6 +66,7 @@ Add only what is required from:
 8. Avoid generic REST payloads that include commit diffs/files/body content when only SHA/state/conclusion is needed.
 9. Domain docs for an active PR are read from the active exact head first when they are not on main.
 10. Never infer the canonical active lane from PR recency alone.
+11. Use the canonical compact PR-discovery primitive before any alternative discovery path.
 
 ## Active-lane semantics
 
@@ -92,18 +102,13 @@ Therefore:
 ## Evidence budget
 
 For status/resume tasks, target:
-- <= 13 project-evidence requests;
+- <= 11 project-evidence requests when canonical PR discovery is sufficient;
+- hard ceiling <= 13 unless live ambiguity genuinely requires more;
 - 0 broad schema dumps;
 - 0 generic commit-diff fetches;
 - 0 repeated document reads;
 - <= 1 NORMAL escalation.
 
-Exceeding the target is allowed only when live ambiguity genuinely requires it, and the reason must be recorded.
-
 ## Promotion condition
 
-Lean v2 is promotable only if repeated live benchmarks preserve correctness and materially reduce:
-- task-evidence requests;
-- payload size;
-- failed probes;
-- human correction risk.
+Lean v2.1 is promotable only if a fresh stability benchmark preserves correctness/recoverability and creates measurable request headroom below PASS E.
