@@ -1,5 +1,5 @@
 schema_version: "1.0"
-updated_at: "2026-09-22T06:33:00Z"
+updated_at: "2026-09-22T06:40:00Z"
 
 repository: "Kolobokoleg29/Agent_experiens"
 default_branch: "master"
@@ -9,21 +9,23 @@ state: "IN_PROGRESS"
 
 active_pr: null
 active_branch: "lab/lean-bootstrap-evals"
-active_head: "b52dc08a930a353681da2366c768fa24b24905d0"
-last_verified_head: "b52dc08a930a353681da2366c768fa24b24905d0"
+active_head: null
+last_verified_head: "152025d7db0782e61494681ae368362025089b28"
 active_lane: "lean-bootstrap-evals"
 
 gates:
   lab_files_present: "PASS"
-  production_game_repos_modified: "PASS"
-  lean_status_benchmark: "OPEN"
+  production_game_repos_untouched: "PASS"
+  lean_status_benchmark_c: "PASS"
+  total_context_savings: "OPEN"
 
 next_slice:
-  id: "lean-status-benchmark-c"
-  goal: "Run a fresh-context Lean FAST status/resume benchmark against the same FILIK2 snapshot and compare cost/quality with recorded Legacy and Current OS baselines."
+  id: "pass-d-clean-tooling-overhead"
+  goal: "Separate Lean task-evidence cost from GitHub tool-discovery overhead using a controlled fixture and a fresh live replay."
   risk: "LOW"
   requires:
-    - "Use a fresh chat/context that has not seen the prior benchmark answer."
+    - "Use lab/PASS_D_CLEAN_BENCHMARK.md"
+    - "Keep game repositories read-only"
 
 deferred_lanes:
   - "promotion-to-master"
@@ -33,10 +35,12 @@ deferred_lanes:
 blocking_debts: []
 
 source_refs:
-  - "lab/LEAN_BOOTSTRAP.md"
-  - ".agents/skills/project-audit/SKILL.md"
-  - "lab/BENCHMARK_PLAN.md"
+  - "lab/results/PASS_C_FILIK2_LEAN_2026-09-22.md"
+  - "lab/GITHUB_FAST_PATH.md"
+  - "lab/PASS_D_CLEAN_BENCHMARK.md"
 
 notes:
-  - "No game repository may be mutated by this lab benchmark."
-  - "Promotion requires measured evidence and explicit approval."
+  - "PASS C: 13 GitHub requests vs Legacy 18 and Current OS 23."
+  - "PASS C preserved exact-head correctness and one-slice scope control."
+  - "Total context savings remain unproven because broad tool-schema discovery polluted the run."
+  - "A status file cannot authoritatively store its own current branch HEAD: writing the file creates a newer commit. Treat stored head values as observations and verify live GitHub state."
